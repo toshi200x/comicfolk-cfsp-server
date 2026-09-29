@@ -43,15 +43,15 @@ This starts the admin panel (by default at `http://<this machine's address>:7878
 1. When you open the admin panel in a browser, you'll first be asked to **set a password for the admin panel** (8+ characters).
 2. After setting the password and logging in, specify one or more **library sources** (folders containing your archives) on the dashboard. Either browse to them with the folder picker or type the path directly, then save.
 3. Saving automatically issues a connection token and starts the library API (port 8787 by default) right away, with no server restart needed.
-4. Scan the QR code shown on the dashboard from the "Add server" screen in the ComicFolk app to register the address and token in one go.
+4. In the ComicFolk app's bookshelf, choose "Add ComicFolk Protocol server", enter this PC's address and the library API port under "Host:port" (e.g. `192.168.1.10:8787`), and the connection token shown on the dashboard under "Access token".
 
 ### Connecting from outside your home (Tailscale recommended)
 
 Exposing the server's ports directly to the internet is not safe (see "Ports" below), so to connect while you're away from home we recommend a VPN such as [Tailscale](https://tailscale.com/) (free for personal use). You also won't need to set up port forwarding on your router.
 
 1. Install Tailscale on both the server PC and the phone you use ComicFolk on, and sign in with the same account.
-2. Open the admin panel using the server PC's Tailscale address (`100.x.x.x`, e.g. `http://100.x.x.x:7878/`) and scan the QR code shown there with the app. The QR code contains the address you opened the admin panel with, so opening it via the Tailscale address registers a connection that goes through Tailscale.
-3. In the ComicFolk app you can register several connections for one server, such as one for your home LAN and one for Tailscale, and the app automatically picks whichever connects fastest. It works at home and on the go without switching settings.
+2. When registering the server in the app, enter the server PC's Tailscale address under "Host:port" (`100.x.x.x:8787`; you can find the address in the Tailscale app or admin console).
+3. If you've already registered the server with its home LAN address, use "Add connection" to add the Tailscale address to it. With several connections registered for one server, the app automatically picks whichever connects fastest, so it works at home and on the go without switching settings.
 
 ## Updating
 
