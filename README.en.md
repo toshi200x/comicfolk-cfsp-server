@@ -8,6 +8,7 @@ A self-hosted server implementation for [ComicFolk](https://github.com/toshi200x
 - Works the same way on Windows / Linux / macOS
 - Designed for self-hosting by a single user (one server = one user)
 - Update to a new version with one click from the admin panel (v0.1.27 and later)
+- Per-book margin crop and image correction settings are saved on the server and shared across your devices (v0.1.29 and later, with ComicFolk app v1.23 or later)
 
 This repository only distributes **pre-built binaries**. The source code is not public.
 
@@ -111,9 +112,9 @@ There's no Windows service, systemd unit, or Docker image yet. If you need it to
 - Updates and "Restart now" from the admin panel work without relying on your service manager: the launcher script restarts the server by itself.
 - If the server exits for any other reason, the launcher script exits too (set up automatic restarts on crashes in your service manager).
 
-## Speech-balloon translation requirements (coming in a future ComicFolk app update)
+## Speech-balloon translation requirements
 
-The server includes a feature that translates the dialogue of books requested from the ComicFolk app (using the Google Gemini API; the API key is set in the app). Text-region detection uses ONNX Runtime, so it only runs on certain OS/CPU combinations. **On unsupported systems only translation is disabled; everything else keeps working** (the reason is shown in the admin panel).
+The ComicFolk app's "automatic speech-balloon translation" (app v1.22 or later) has this server translate the dialogue of books (using the Google Gemini API; the API key is set in the app's Settings and passed to the server encrypted). Text-region detection uses ONNX Runtime, so it only runs on certain OS/CPU combinations. **On unsupported systems only translation is disabled; everything else keeps working** (the reason is shown in the admin panel).
 
 | OS | CPU | Extra requirements |
 |---|---|---|
