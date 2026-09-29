@@ -8,7 +8,9 @@ A self-hosted server implementation for [ComicFolk](https://github.com/toshi200x
 - Works the same way on Windows / Linux / macOS
 - Designed for self-hosting by a single user (one server = one user)
 - Update to a new version with one click from the admin panel (v0.1.27 and later)
-- Per-book margin crop and image correction settings are saved on the server and shared across your devices (v0.1.29 and later, with ComicFolk app v1.23 or later)
+- Per-book margin crop and image correction settings are saved on the server and shared across your devices (v0.1.29 and later, with ComicFolk app v1.24 or later)
+- Register the server in the app just by scanning the QR code in the admin panel (v0.1.35 and later, with ComicFolk app v1.24 or later)
+- Thumbnail covers are picked while skipping blank pages and recognizing cover scans. Auto-generated thumbnails can be rebuilt for the whole library from the admin panel, or per folder or per book from the app (v0.1.35 and later; rebuilding from the app needs ComicFolk app v1.24 or later)
 
 This repository only distributes **pre-built binaries**. The source code is not public.
 
@@ -43,15 +45,17 @@ This starts the admin panel (by default at `http://<this machine's address>:7878
 1. When you open the admin panel in a browser, you'll first be asked to **set a password for the admin panel** (8+ characters).
 2. After setting the password and logging in, specify one or more **library sources** (folders containing your archives) on the dashboard. Either browse to them with the folder picker or type the path directly, then save.
 3. Saving automatically issues a connection token and starts the library API (port 8787 by default) right away, with no server restart needed.
-4. In the ComicFolk app's bookshelf, choose "Add ComicFolk Protocol server", enter this PC's address and the library API port under "Host:port" (e.g. `192.168.1.10:8787`), and the connection token shown on the dashboard under "Access token".
+4. Under "Connection Token & QR Code" on the dashboard, choose the address your phone will connect to (the one marked "LAN" for your home network, or "Tailscale" to also connect from outside).
+5. In the ComicFolk app (v1.24 or later), choose "Add ComicFolk Protocol server" on the bookshelf and tap "Scan QR code". Scanning the QR code fills in the address, connection token and PC name (the default server name) in one go; then just register it.
+   - To enter it by hand, type the "Host:port" shown on the dashboard (e.g. `192.168.1.10:8787`) and the connection token.
 
 ### Connecting from outside your home (Tailscale recommended)
 
 Exposing the server's ports directly to the internet is not safe (see "Ports" below), so to connect while you're away from home we recommend a VPN such as [Tailscale](https://tailscale.com/) (free for personal use). You also won't need to set up port forwarding on your router.
 
 1. Install Tailscale on both the server PC and the phone you use ComicFolk on, and sign in with the same account.
-2. When registering the server in the app, enter the server PC's Tailscale address under "Host:port" (`100.x.x.x:8787`; you can find the address in the Tailscale app or admin console).
-3. If you've already registered the server with its home LAN address, use "Add connection" to add the Tailscale address to it. With several connections registered for one server, the app automatically picks whichever connects fastest, so it works at home and on the go without switching settings.
+2. In the admin panel, choose the address marked "Tailscale" (`100.x.x.x`) under "Address your phone connects to" and scan the QR code with the app (or enter `100.x.x.x:8787` by hand).
+3. If you've already registered the server with its home LAN address, scanning its QR code again makes the app recognize the same server and offer to add the Tailscale address as another connection (you can also add one by hand with "Add connection"). With several connections registered for one server, the app automatically picks whichever connects fastest, so it works at home and on the go without switching settings.
 
 ## Updating
 
