@@ -11,6 +11,7 @@ A self-hosted server implementation for [ComicFolk](https://github.com/toshi200x
 - Per-book margin crop and image correction settings are saved on the server and shared across your devices (v0.1.29 and later, with ComicFolk app v1.24 or later)
 - Register the server in the app just by scanning the QR code in the admin panel (v0.1.35 and later, with ComicFolk app v1.24 or later)
 - Thumbnail covers are picked while skipping blank pages and recognizing cover scans. Auto-generated thumbnails can be rebuilt for the whole library from the admin panel, or per folder or per book from the app (v0.1.35 and later; rebuilding from the app needs ComicFolk app v1.24 or later)
+- "Work info": AI (Google Gemini) reads your books and sums up each work's title, authors, genres, synopsis and keywords, shown translated into the app's display language (v0.1.37 and later, with ComicFolk app v1.25 or later; see [Work info (AI)](#work-info-ai))
 
 This repository only distributes **pre-built binaries**. The source code is not public.
 
@@ -90,6 +91,8 @@ The config file, index DB and thumbnails are **not** stored in the current worki
 ~/.comicfolk-sync-server/
   cfsp-admin.properties   # admin password, library sources, connection token, etc.
   cfsp-index.db           # persistent index (SQLite; also holds history, tags, bookmarks, etc.)
+  cfsp-translation.db     # speech-balloon translation results
+  cfsp-workinfo.db        # work info (AI results, your edits, translations) and the work info queue
   thumbnails/             # generated thumbnails
   update/                 # working files for updates from the admin panel
 ```
@@ -135,6 +138,27 @@ The ComicFolk app's "automatic speech-balloon translation" (app v1.22 or later) 
 | macOS | Apple Silicon | None |
 
 Translation isn't available on Intel Macs, musl-based systems such as Alpine Linux, 32-bit OSes, or Windows on ARM.
+
+## Work info (AI)
+
+In the ComicFolk app (v1.25 or later), opening a folder lets you view and edit its "work info": title, authors, publisher, genres, synopsis and keywords. The server creates it by sending the book's pages to the Google Gemini API.
+
+- **API key**: Uses the Gemini API key set in the app's Settings, the same one as speech-balloon translation. It's passed to the server encrypted and kept only in memory; after a server restart, the app passes it again the next time it connects
+- **What counts as a work**: A folder that directly contains books is one work. The server sends the first 60 pages and the last 6 pages of the first book (volume 1) in that folder, at low resolution
+- **Requesting it**: Request one work from the button on the folder screen in the app, or a whole folder (optionally with its subfolders) from "Get work info" in the menu. Requests are processed in order from a queue on the server, which carries on after a restart
+- **Rate limits**: To stay within the Gemini API free tier, the server automatically waits so it doesn't exceed 15 requests and 250,000 tokens per minute and 500 requests per day (reset at midnight Pacific Time). Each work takes 2 requests, so about 250 works per day. When the daily limit is reached, the rest is processed the next day
+- **Translation**: When the app's display language isn't Japanese (English, Korean, Chinese (Simplified/Traditional) or French), genres are shown with their names in that language, and the synopsis and keywords are translated with Gemini the first time you open that work's info (one request per work and language; the result is saved and reused). Titles and authors aren't translated
+- **Your edits**: Fields you edit in the app are saved on the server and aren't overwritten when the work is analyzed again. "Use AI value" brings the AI's value back
+- **Requirements**: Unlike speech-balloon translation it doesn't use ONNX Runtime, so there are no OS/CPU restrictions (an internet connection is required)
+
+You can change the limits and the model with environment variables.
+
+| Variable | What it controls | Default |
+|---|---|---|
+| `CFSP_WORKINFO_RPM` | Max requests per minute | `15` |
+| `CFSP_WORKINFO_TPM` | Max tokens per minute | `250000` |
+| `CFSP_WORKINFO_RPD` | Max requests per day | `500` |
+| `CFSP_WORKINFO_MODEL` | Gemini model to use | `gemini-3.1-flash-lite` |
 
 ## Known limitations
 
