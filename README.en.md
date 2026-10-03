@@ -12,6 +12,7 @@ A self-hosted server implementation for [ComicFolk](https://github.com/toshi200x
 - Register the server in the app just by scanning the QR code in the admin panel (v0.1.35 and later, with ComicFolk app v1.24 or later)
 - Thumbnail covers are picked while skipping blank pages and recognizing cover scans. Auto-generated thumbnails can be rebuilt for the whole library from the admin panel, or per folder or per book from the app (v0.1.35 and later; rebuilding from the app needs ComicFolk app v1.24 or later)
 - "Work info": AI (Google Gemini) reads your books and sums up each work's title, authors, genres, synopsis and keywords, shown translated into the app's display language (v0.1.37 and later, with ComicFolk app v1.25 or later; see [Work info (AI)](#work-info-ai))
+- Star ratings (none, or 1 to 5) for each work (folder) are saved on the server and shared across your devices (v0.1.38 and later, with ComicFolk app v1.27 or later). Ratings stay with a folder even if you rename or move it
 
 This repository only distributes **pre-built binaries**. The source code is not public.
 
